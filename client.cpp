@@ -8,6 +8,9 @@ int main() {
     int port;
     int clientSocket = socket(AF_INET, SOCK_STREAM, 0);
 
+    int bytesReceived;
+    char buf[4096];
+
     if (clientSocket == -1) {
         cout << "Error creating socket" << endl;
         return -1;
@@ -33,10 +36,9 @@ int main() {
         cout << "Connected to server" << endl;
     }
 
-    char buf[4096];
     do {
         memset(buf, 0, 4096);
-        int bytesReceived = recv(clientSocket, buf, 4096, 0);
+        bytesReceived = recv(clientSocket, buf, 4096, 0);
         if (bytesReceived == -1)
         {
             cout << "Error receiving from server" << endl;

@@ -51,16 +51,20 @@ string getStockOptions() {
 
 // Procedimento para inicializar a lista de ações e atualizar seus respectivos valores
 void *refreshStockOptions(void *arg) {
+    int indexAcao;
+    int price;
+    int numeroAcoesAtualizar;
+
     initializeStockOptionsValues();
 
     while (true)
     {
-        int numeroAcoesAtualizar = randomNumber(3, NOOFSTOCKOPTIONS);
+        numeroAcoesAtualizar = randomNumber(3, NOOFSTOCKOPTIONS);
 
         for (int i = 0; i < numeroAcoesAtualizar; i++)
         {
-            int indexAcao = randomNumber(0, NOOFSTOCKOPTIONS);
-            int price = randomNumber(0, 100);
+            indexAcao = randomNumber(0, NOOFSTOCKOPTIONS);
+            price = randomNumber(0, 100);
 
             stockOptions[indexAcao].price = price;
         }
@@ -75,13 +79,14 @@ void *refreshStockOptions(void *arg) {
 void *sendDataToClient(void *ClientSocket) {
     int *clientSocket = (int *)ClientSocket;
     int lastUpdatedTime = 0;
+    int sendRes;
 
     while (true) {
         if (lastUpdatedTime != updatedTime) {
             lastUpdatedTime = updatedTime;
 
             string price = getStockOptions();
-            int sendRes = send(*clientSocket, price.c_str(), price.size() + 1, 0);
+            sendRes = send(*clientSocket, price.c_str(), price.size() + 1, 0);
 
             if (sendRes == -1) {
                 cout << "Error sending to client" << endl;
